@@ -27,5 +27,6 @@ async function register() {
         window.location.href = 'login.html';
     } else {
         errorMessage.textContent = data.error || 'Registration failed.';
+        console.log('Registration failed with error:', data.error || 'Registration failed');
     }
 }

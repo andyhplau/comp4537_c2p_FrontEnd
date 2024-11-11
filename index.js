@@ -1,27 +1,21 @@
 const express = require('express');
 const path = require('path');
+
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = 3000;
 
-// Middleware to serve static files
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/views', express.static(path.join(__dirname, 'views')));
+app.use('/js', express.static(path.join(__dirname, 'js')));
 
-// Route to serve home page
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
-// Route to serve stats page
-app.get('/stats', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'stats.html'));
-});
-
-// Route to serve bot page
-app.get('/bot', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'bot.html'));
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'register.html'));
 });
 
 // Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
