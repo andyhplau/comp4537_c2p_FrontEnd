@@ -23,20 +23,20 @@ const JWT_EXPIRATION = '1h';
 // ███████╗ █████╗   ███████╗ ███████╗ ██║ ██║   ██║ ██╔██╗ ██║ ███████╗
 // ╚════██║ ██╔══╝   ╚════██║ ╚════██║ ██║ ██║   ██║ ██║╚██╗██║ ╚════██║
 // ███████║ ███████╗ ███████║ ███████║ ██║ ╚██████╔╝ ██║ ╚████║ ███████║
-// function authenticateToken(req, res, next) {
-//     const token = req.cookies.authToken;
-//     if (!token) {
-//       return res.status(401).json({ message: 'Unauthorized' });
-//     }
+function authenticateToken(req, res, next) {
+    const token = req.cookies.authToken;
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
   
-//     jwt.verify(token, JWT_SECRET, (err, user) => {
-//       if (err) {
-//         return res.status(403).json({ message: 'Forbidden' });
-//       }
-//       req.user = user;
-//       next();
-//     });
-//   }
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+      if (err) {
+        return res.status(403).json({ message: 'Forbidden' });
+      }
+      req.user = user;
+      next();
+    });
+  }
 
 
 
@@ -87,9 +87,9 @@ app.get('/register', (req, res) => {
 // ██║      ██║  ██║ ╚██████╔╝    ██║   ███████╗╚██████╗   ██║   ███████╗██████╔╝
 // ╚═╝      ╚═╝  ╚═╝  ╚═════╝     ╚═╝   ╚══════╝ ╚═════╝   ╚═╝   ╚══════╝╚═════╝ 
 
-app.get('/protected', authenticateToken, (req, res) => {
-    res.status(200).json({ message: `Hello, ${req.user.username}` });
-  });
+// app.get('/protected', authenticateToken, (req, res) => {
+//     res.status(200).json({ message: `Hello, ${req.user.username}` });
+//   });
 
 
 
