@@ -2,3 +2,10 @@
     <p>Welcome to the Home Page</p>
     <button onclick="logout()">Logout</button>
 </div>
+
+<script>
+    function logout() {
+    localStorage.removeItem('jwtToken');
+    window.location.href = '/login'; 
+ }
+</script>
