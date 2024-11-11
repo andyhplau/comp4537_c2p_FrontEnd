@@ -5,7 +5,7 @@ async function fetchUserData() {
         window.location.href = '/login'; 
     }
 
-    const response = await fetch('/api/v1/user/data', {
+    const response = await fetch('https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/stats/:id', {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
