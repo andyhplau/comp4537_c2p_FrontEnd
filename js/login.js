@@ -10,22 +10,23 @@ async function login() {
         return;
     }
 
-    const response = await fetch('https://andypangpang.com/api/v1/user/login/ ', {
+    const formData = new URLSearchParams();
+    formData.append('email', email);
+    formData.append('password', password);
+
+    const response = await fetch('https://andypangpang.com/api/v1/user/login/', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded', 
         },
-        body: JSON.stringify({
-            email: email,
-            password: password
-        })
+        body: formData.toString()  
     });
 
     const data = await response.json();
 
     if (response.status === 200) {
         localStorage.setItem('jwtToken', data.jwtToken); // Store the token
-        window.location.href = 'home.html'; // Redirect to a protected page
+        window.location.href = '/home';  
     } else {
         errorMessage.textContent = data.error || 'Login failed.';
     }

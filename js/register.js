@@ -4,27 +4,28 @@ async function register() {
     const errorMessage = document.getElementById('error-message');
     
     errorMessage.textContent = '';
-    
+
     if (!email || !password) {
         errorMessage.textContent = 'Both fields are required.';
         return;
     }
 
+    const formData = new URLSearchParams();
+    formData.append('email', email);
+    formData.append('password', password);
+
     const response = await fetch('https://andypangpang.com/api/v1/user/register/', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({
-            email: email,
-            password: password
-        })
+        body: formData.toString()  
     });
 
     const data = await response.json();
 
     if (response.status === 200) {
-        window.location.href = 'login.html';
+        window.location.href = '/login';
     } else {
         errorMessage.textContent = data.error || 'Registration failed.';
         console.log('Registration failed with error:', data.error || 'Registration failed');
