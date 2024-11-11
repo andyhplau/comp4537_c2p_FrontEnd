@@ -14,12 +14,12 @@ async function register() {
     formData.append('email', email);
     formData.append('password', password);
 
-    const response = await fetch('https://andypangpang.com/api/v1/user/register/', {
+    const response = await fetch('https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/register/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: formData.toString()  
+        body: formData.toString()
     });
 
     const data = await response.json();

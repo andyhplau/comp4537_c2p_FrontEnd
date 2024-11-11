@@ -14,7 +14,7 @@ async function login() {
     formData.append('email', email);
     formData.append('password', password);
 
-    const response = await fetch('https://andypangpang.com/api/v1/user/login/', {
+    const response = await fetch('https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/login/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded', 
