@@ -3,8 +3,6 @@ async function register() {
     const password = document.getElementById('password').value;
     const errorMessage = document.getElementById('error-message');
     
-    errorMessage.textContent = '';
-
     if (!email || !password) {
         errorMessage.textContent = 'Both fields are required.';
         return;

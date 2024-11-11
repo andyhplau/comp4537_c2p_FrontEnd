@@ -92,13 +92,10 @@ app.get('/register', (req, res) => {
 // app.get('/protected', authenticateToken, (req, res) => {
 //     res.status(200).json({ message: `Hello, ${req.user.username}` });
 //   });
-
-
-
-
-
-
-
+  app.get('/admin', authenticateToken, (req, res) =>
+  {
+    res.sendFile(path.join(__dirname, 'views', 'admin.html'));
+  });
 
   app.post('/logout', (req, res) => {
     res.clearCookie('authToken');
