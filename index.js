@@ -51,21 +51,20 @@ function setAuthLevel(identifer, req) {
   }
 }
 
+
 /**
- * Middleware: checks the user level and redirects to the appropriate page
+ * Middleware: checks if user level is admin
  * 
  * @param {*} req 
  * @param {*} res 
  * @param {*} next 
  * @returns 
  */
-function checkUserLevel(req, res, next) {
+function checkAdmin(req, res, next) {
   if (req.session.userLevel === 'admin') {
     return next();
-  } else if (req.session.userLevel === 'user') {
-    return next();
   } else {
-    return res.redirect('/login');
+    return res.redirect('/401'); 
   }
 }
 
@@ -77,12 +76,11 @@ function checkUserLevel(req, res, next) {
 // ██║  ██║ ╚██████╔╝ ██║ ╚═╝ ██║ ███████╗     ██╔╝   
 // ╚═╝  ╚═╝  ╚═════╝  ╚═╝     ╚═╝ ╚══════╝     ╚═╝   
 
-app.get('/home', checkUserLevel, (req, res) => {
+app.get('/home', (req, res) => {
   if (!req.session.authToken || !req.session.userLevel) {
     return res.redirect('/login'); // If no valid session, redirect to login
   }
-  
-  // else open home.html
+  console.log('current session level:', req.session.userLevel);
   res.sendFile(path.join(__dirname, 'views', 'home.html'));
 });
 
@@ -189,7 +187,8 @@ app.post('/login', async (req, res) => {
 // ██║      ██║  ██║ ╚██████╔╝    ██║    ███████╗ ╚██████╗    ██║    ███████╗ ██████╔╝
 // ╚═╝      ╚═╝  ╚═╝  ╚═════╝     ╚═╝    ╚══════╝  ╚═════╝    ╚═╝    ╚══════╝ ╚═════╝ 
 
-app.get('/admin', checkUserLevel, (req, res) => {
+app.get('/admin', checkAdmin, (req, res) => {
+  console.log('current session level:', req.session.userLevel);
   res.sendFile(path.join(__dirname, 'views', 'admin.html'));
 });
 
@@ -203,6 +202,7 @@ app.get('/admin', checkUserLevel, (req, res) => {
 // ╚══════╝  ╚═════╝   ╚═════╝   ╚═════╝   ╚═════╝     ╚═╝
 
 app.post('/logout', (req, res) => {
+  console.log('Logging out...');
   req.session.destroy((err) => {
     if (err) {
       return res.status(500).send('Could not log out, try again later.');
