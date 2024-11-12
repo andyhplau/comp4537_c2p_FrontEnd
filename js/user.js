@@ -4,6 +4,7 @@ async function fetchUserData() {
     "https://comp4537-c2p-front-end-one.vercel.app/getUserStats",
     {
       method: "GET",
+      credentials: "include",
     }
   );
 

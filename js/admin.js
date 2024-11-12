@@ -4,6 +4,7 @@ async function fetchAdminData() {
     "https://comp4537-c2p-front-end-one.vercel.app/getAllUsersStats",
     {
       method: "GET",
+      credentials: "include",
     }
   );
   if (response.status === 200) {

@@ -18,7 +18,12 @@ app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://comp4537-c2p-front-end-one.vercel.app",
+    credentials: true,
+  })
+);
 const bcrypt = require("bcrypt");
 
 // ███████╗ ███████╗ ███████╗ ███████╗ ██╗  ██████╗  ███╗   ██╗ ███████╗
@@ -366,6 +371,10 @@ app.get("/admin", checkAdmin, (req, res) => {
 });
 
 app.get("/getAllUsersStats", checkAdmin, async (req, res) => {
+  res.header("Access-Control-Allow-Origin", allowedOrigin);
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,POST");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   try {
     const response = await axios.get(
       "https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/userStats/",
@@ -391,6 +400,10 @@ app.get("/user", (req, res) => {
 });
 
 app.get("/getUserStats", async (req, res) => {
+  res.header("Access-Control-Allow-Origin", allowedOrigin);
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,POST");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   try {
     const response = await axios.get(
       `https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/stats/${req.session.userId}/`,
