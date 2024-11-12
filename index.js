@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
-
+const cors = require("cors");
 const app = express();
 const port = 3000;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
@@ -18,6 +18,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors());
 const bcrypt = require("bcrypt");
 
 // ███████╗ ███████╗ ███████╗ ███████╗ ██╗  ██████╗  ███╗   ██╗ ███████╗
