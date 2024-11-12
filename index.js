@@ -127,7 +127,8 @@ app.post("/login", async (req, res) => {
 
   try {
     const response = await axios.post(
-      "https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/login/",
+      // "https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/login/",
+      "http://127.0.0.1:8000/api/v1/user/login/",
       {
         email,
         password,
@@ -139,12 +140,13 @@ app.post("/login", async (req, res) => {
       }
     );
 
-    const { success, message, jwtToken, identifier } = response.data;
+    const { success, message, userId, jwtToken, identifier } = response.data;
 
     if (success) {
       console.log("is success:", success);
       console.log("Login successful:", message);
       req.session.authToken = jwtToken;
+      req.session.userId = userId;
       setAuthLevel(identifier, req);
       console.log("current session level:", req.session.userLevel);
       console.log("Redirecting...");
@@ -199,8 +201,33 @@ app.get("/getAllUsersStats", checkAdmin, async (req, res) => {
       }
     );
     const data = response.data;
-    console.log("data:", data);
 
+    res.send(data);
+  } catch (error) {
+    console.error("Error during fetch:", error);
+    return res
+      .status(500)
+      .send({ error: "Something went wrong. Please try again." });
+  }
+});
+
+app.get("/user", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "user.html"));
+});
+
+app.get("/getUserStats", async (req, res) => {
+  try {
+    const response = await axios.get(
+      // "https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/stats/:id",
+      `http://127.0.0.1:8000/api/v1/user/stats/${req.session.userId}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${req.session.authToken}`,
+        },
+      }
+    );
+    const data = response.data;
+    console.log("data:", data);
     res.send(data);
   } catch (error) {
     console.error("Error during fetch:", error);
