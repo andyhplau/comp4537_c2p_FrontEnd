@@ -1,7 +1,7 @@
 // Fetch user data after login
 async function fetchUserData() {
   const response = await fetch(
-    "https://comp4537-c2p-front-6supfrwy5-andyhplaus-projects.vercel.app/getUserStats",
+    "https://comp4537-c2p-front-end-one.vercel.app/getUserStats",
     {
       method: "GET",
     }
