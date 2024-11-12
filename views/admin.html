@@ -1,49 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
 
     <link rel="stylesheet" href="/styles/style.css" />
-</head>
+  </head>
 
-<body>
-
+  <body>
     <header class="add-margin-bottom-20">
-        <h1>COMP4537 - C2P - AI-Powered Notebook</h1>
-        <h2 class="remove-margin-bottom">User API Consumption</h2>
-        <code style="color:red;">Admins only</code>
+      <h1>COMP4537 - C2P - AI-Powered Notebook</h1>
+      <h2 class="remove-margin-bottom">User API Consumption</h2>
+      <code style="color: red">Admins only</code>
     </header>
     <main class="add-margin-bottom-20">
-        <div class="container add-margin-bottom-20">
-            <div id="adminInfo">
-                <table id="userTable">
-
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>API Calls Used</th>
-                            <th>API Calls Remaining</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- TODO: User data will be inserted here -->
-                    </tbody>
-                </table>
-            </div>
+      <div class="container add-margin-bottom-20">
+        <div id="adminInfo">
+          <table id="userTable">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>API Calls Used</th>
+                <th>API Calls Remaining</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- TODO: User data will be inserted here -->
+            </tbody>
+          </table>
         </div>
+      </div>
     </main>
-    <hr>
-    <div style="margin-top:1em">
-        <form action="/logout" method="POST">
-            <button type="submit">Logout</button>
-        </form>
+    <hr />
+    <div style="margin-top: 1em">
+      <form action="/logout" method="POST">
+        <button type="submit">Logout</button>
+      </form>
     </div>
 
-    <script src="/js/utils.js"></script>
-</body>
-
+    <script src="../js/utils.js"></script>
+    <script src="../js/admin.js"></script>
+  </body>
 </html>

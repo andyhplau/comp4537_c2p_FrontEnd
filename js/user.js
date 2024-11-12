@@ -1,35 +1,34 @@
 // Fetch user data after login
 async function fetchUserData() {
-    const token = localStorage.getItem('jwtToken');
-    if (!token) {
-        window.location.href = '/login'; 
+  const response = await fetch(
+    "https://comp4537c2pfrontend-production.up.railway.app/getUserStats",
+    {
+      method: "GET",
     }
+  );
 
-    const response = await fetch('https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/stats/:id', {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        }
-    });
-
+  if (response.status === 200) {
     const data = await response.json();
-    
-    if (response.status === 200) {
-        document.getElementById('userName').textContent = data.firstName;
-        document.getElementById('userEmail').textContent = data.email;
-        document.getElementById('apiCallsRemaining').textContent = data.apiCallsRemaining;
-        
-        if (data.apiCallsRemaining <= 0) {
-            document.getElementById('warningMessage').textContent = 'You have reached your free API usage limit.';
-        }
-    } else {
-        window.location.href = '/login'; 
+    console.log(data);
+
+    document.getElementById("userEmail").textContent = data.user__email;
+    document.getElementById("apiCallsUsed").textContent = data.request_count;
+    document.getElementById("apiCallsRemaining").textContent = data.token_count;
+
+    if (data.token_count <= 0) {
+      document.getElementById("warningMessage").textContent =
+        "You have reached your free API usage limit.";
     }
+  } else {
+    window.location.href = "/login";
+  }
 }
 
 function logout() {
-    localStorage.removeItem('jwtToken');
-    window.location.href = '/login'; 
+  localStorage.removeItem("jwtToken");
+  window.location.href = "/login";
 }
 
-fetchUserData();
+document.addEventListener("DOMContentLoaded", function () {
+  fetchUserData();
+});
