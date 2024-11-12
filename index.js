@@ -175,7 +175,33 @@ app.post("/login", async (req, res) => {
 // ██║  ██║ ██║     ███████╗ ██║ ╚████║ ██████╔╝ ██║      ╚██████╔╝ ██║ ██║ ╚████║    ██║    ███████║
 // ╚═╝  ╚═╝ ╚═╝     ╚══════╝ ╚═╝  ╚═══╝ ╚═════╝  ╚═╝       ╚═════╝  ╚═╝ ╚═╝  ╚═══╝    ╚═╝    ╚══════╝
 
-// TODO: ai api endpoints
+app.get("/ai", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "ai.html"));
+});
+
+app.post("/createPage", async (req, res) => {
+  const { name } = req.body;
+
+  try {
+    const response = await axios.post(
+      `http://127.0.0.1:8000/api/v1/bot/${req.session.userId}/page/`,
+      {
+        name,
+      },
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${req.session.authToken}`,
+        },
+      }
+    );
+
+    return res.redirect("/ai");
+  } catch (error) {
+    console.error("Error during fetch:", error.response.data.error);
+    return res.status(500).send({ error: error.response.data.error });
+  }
+});
 
 // ██████╗  ██████╗   ██████╗  ████████╗ ███████╗  ██████╗ ████████╗ ███████╗ ██████╗
 // ██╔══██╗ ██╔══██╗ ██╔═══██╗ ╚══██╔══╝ ██╔════╝ ██╔════╝ ╚══██╔══╝ ██╔════╝ ██╔══██╗

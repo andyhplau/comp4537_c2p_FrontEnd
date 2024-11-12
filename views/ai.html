@@ -14,7 +14,11 @@
         <h1>COMP4537 - C2P - AI-Powered Notebook</h1>
         <p>Welcome to the AI page</p>
         <main>
-            Content here
+            <h3>Create a Page</h3>
+            <form action="/createPage" method="POST">
+                <label for="name">Create a page for your context collection:</label>
+                <input type="text" name="name" placeholder="Enter the Page name" required />
+                <button type="submit">Create</button>
         </main>
         <form action="/logout" method="POST">
             <button type="submit">Logout</button>
