@@ -1,8 +1,11 @@
 // Fetch user data after login
 async function fetchUserData() {
-  const response = await fetch("http://localhost:3000/getUserStats", {
-    method: "GET",
-  });
+  const response = await fetch(
+    "https://comp4537c2pfrontend-production.up.railway.app/getUserStats",
+    {
+      method: "GET",
+    }
+  );
 
   if (response.status === 200) {
     const data = await response.json();

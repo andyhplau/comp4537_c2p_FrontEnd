@@ -127,8 +127,7 @@ app.post("/login", async (req, res) => {
 
   try {
     const response = await axios.post(
-      // "https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/login/",
-      "http://127.0.0.1:8000/api/v1/user/login/",
+      "https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/login/",
       {
         email,
         password,
@@ -184,7 +183,7 @@ app.post("/createPage", async (req, res) => {
 
   try {
     const response = await axios.post(
-      `http://127.0.0.1:8000/api/v1/bot/${req.session.userId}/page/`,
+      `https://comp4537-c2p-api-server-1.onrender.com/api/v1/bot/${req.session.userId}/page/`,
       {
         name: pageName,
       },
@@ -208,7 +207,7 @@ app.post("/createContext", async (req, res) => {
 
   try {
     const response = await axios.post(
-      `http://127.0.0.1:8000/api/v1/bot/${req.session.userId}/page/${contextPageName}/`,
+      `https://comp4537-c2p-api-server-1.onrender.com/api/v1/bot/${req.session.userId}/page/${contextPageName}/`,
       {
         text: context,
       },
@@ -232,7 +231,7 @@ app.post("/askBot", async (req, res) => {
 
   try {
     const response = await axios.post(
-      `http://127.0.0.1:8000/api/v1/bot/${req.session.userId}/ask/${questionPageName}/`,
+      `https://comp4537-c2p-api-server-1.onrender.com/api/v1/bot/${req.session.userId}/ask/${questionPageName}/`,
       {
         question,
       },
@@ -368,8 +367,7 @@ app.get("/admin", checkAdmin, (req, res) => {
 app.get("/getAllUsersStats", checkAdmin, async (req, res) => {
   try {
     const response = await axios.get(
-      // "https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/userStats/",
-      "http://127.0.0.1:8000/api/v1/user/userStats/",
+      "https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/userStats/",
       {
         headers: {
           Authorization: `Bearer ${req.session.authToken}`,
@@ -394,8 +392,7 @@ app.get("/user", (req, res) => {
 app.get("/getUserStats", async (req, res) => {
   try {
     const response = await axios.get(
-      // "https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/stats/:id",
-      `http://127.0.0.1:8000/api/v1/user/stats/${req.session.userId}/`,
+      `https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/stats/${req.session.userId}/`,
       {
         headers: {
           Authorization: `Bearer ${req.session.authToken}`,

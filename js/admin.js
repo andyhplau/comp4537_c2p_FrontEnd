@@ -1,8 +1,11 @@
 // Fetch admin data and user information
 async function fetchAdminData() {
-  const response = await fetch("http://localhost:3000/getAllUsersStats", {
-    method: "GET",
-  });
+  const response = await fetch(
+    "https://comp4537c2pfrontend-production.up.railway.app/getAllUsersStats",
+    {
+      method: "GET",
+    }
+  );
   if (response.status === 200) {
     const { userStats } = await response.json();
     console.log(userStats);
