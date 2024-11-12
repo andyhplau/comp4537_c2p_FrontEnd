@@ -180,13 +180,13 @@ app.get("/ai", (req, res) => {
 });
 
 app.post("/createPage", async (req, res) => {
-  const { name } = req.body;
+  const { pageName } = req.body;
 
   try {
     const response = await axios.post(
       `http://127.0.0.1:8000/api/v1/bot/${req.session.userId}/page/`,
       {
-        name,
+        name: pageName,
       },
       {
         headers: {
@@ -197,6 +197,156 @@ app.post("/createPage", async (req, res) => {
     );
 
     return res.redirect("/ai");
+  } catch (error) {
+    console.error("Error during fetch:", error.response.data.error);
+    return res.status(500).send({ error: error.response.data.error });
+  }
+});
+
+app.post("/createContext", async (req, res) => {
+  const { contextPageName, context } = req.body;
+
+  try {
+    const response = await axios.post(
+      `http://127.0.0.1:8000/api/v1/bot/${req.session.userId}/page/${contextPageName}/`,
+      {
+        text: context,
+      },
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${req.session.authToken}`,
+        },
+      }
+    );
+    return res.redirect("/ai");
+  } catch (error) {
+    console.error("Error during fetch:", error.response.data.error);
+    return res.status(500).send({ error: error.response.data.error });
+  }
+});
+
+app.post("/askBot", async (req, res) => {
+  const { questionPageName, question } = req.body;
+  let answers = "";
+
+  try {
+    const response = await axios.post(
+      `http://127.0.0.1:8000/api/v1/bot/${req.session.userId}/ask/${questionPageName}/`,
+      {
+        question,
+      },
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${req.session.authToken}`,
+        },
+      }
+    );
+
+    response.data.response.forEach((answer) => {
+      answers += `
+        <p>${answer}</p>
+        <br />
+      `;
+    });
+    console.log("answers:", answers);
+
+    const htmlPage = `
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="/styles/style.css" />
+      </head>
+
+      <body>
+        <div id="home-content">
+          <h1>COMP4537 - C2P - AI-Powered Notebook</h1>
+          <p>Welcome to the AI page</p>
+          <main>
+            <h3>Create a Page</h3>
+            <form action="/createPage" method="POST">
+              <label for="pageName"
+                >Enter the page name for your context collection?</label
+              >
+              <br />
+              <input
+                type="text"
+                name="pageName"
+                placeholder="Enter the Page name"
+                required
+              />
+              <br />
+              <button type="submit">Create</button>
+            </form>
+
+            <h3>Upload context to a page</h3>
+            <form action="/createContext" method="POST">
+              <label for="contextPageName"
+                >Enter the page name for this context:</label
+              >
+              <br />
+              <input
+                type="text"
+                name="contextPageName"
+                placeholder="Enter the Page name"
+                required
+              />
+              <br />
+              <br />
+              <label for="context">Enter the context:</label>
+              <br />
+              <textarea
+                type="text"
+                name="context"
+                placeholder="Enter the context"
+                required
+              ></textarea>
+              <br />
+              <button type="submit">Upload</button>
+            </form>
+
+            <h3>Let's ask some question to our AI on your context</h3>
+            <form action="/askBot" method="POST">
+              <label for="questionPageName"
+                >Enter the page name for your context:</label
+              >
+              <br />
+              <input
+                type="text"
+                name="questionPageName"
+                placeholder="Enter the Page name"
+                required
+              />
+              <br />
+              <br />
+              <label for="question">Enter the question:</label>
+              <br />
+              <input
+                type="text"
+                name="question"
+                placeholder="Enter the question"
+                required
+              />
+              <br />
+              <button type="submit">Ask</button>
+            </form>
+            ${answers}
+          </main>
+          <br>
+          <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+          </form>
+        </div>
+
+        <script src="/js/utils.js"></script>
+      </body>
+    </html>
+    `;
+    return res.send(htmlPage);
   } catch (error) {
     console.error("Error during fetch:", error.response.data.error);
     return res.status(500).send({ error: error.response.data.error });
