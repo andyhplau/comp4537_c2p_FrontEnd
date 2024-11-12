@@ -365,16 +365,9 @@ app.post("/askBot", async (req, res) => {
 // ██║      ██║  ██║ ╚██████╔╝    ██║    ███████╗ ╚██████╗    ██║    ███████╗ ██████╔╝
 // ╚═╝      ╚═╝  ╚═╝  ╚═════╝     ╚═╝    ╚══════╝  ╚═════╝    ╚═╝    ╚══════╝ ╚═════╝
 
-app.get("/admin", checkAdmin, (req, res) => {
+app.get("/admin", checkAdmin, async (req, res) => {
   console.log("current session level:", req.session.userLevel);
-  res.sendFile(path.join(__dirname, "views", "admin.html"));
-});
-
-app.get("/getAllUsersStats", checkAdmin, async (req, res) => {
-  res.header("Access-Control-Allow-Origin", allowedOrigin);
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET,POST");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  let stats = "";
   try {
     const response = await axios.get(
       "https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/userStats/",
@@ -384,9 +377,65 @@ app.get("/getAllUsersStats", checkAdmin, async (req, res) => {
         },
       }
     );
-    const data = response.data;
+    const { userStats } = response.data;
+    userStats.forEach((user) => {
+      stats += `
+        <tr>
+          <td>${user.user__email}</td>
+          <td>${user.request_count}</td>
+          <td>${user.token_count}</td>
+        </tr>
+      `;
+    });
 
-    res.send(data);
+    const htmlPage = `
+    <!DOCTYPE html><!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Admin Dashboard</title>
+
+        <link rel="stylesheet" href="/styles/style.css" />
+      </head>
+
+      <body>
+        <header class="add-margin-bottom-20">
+          <h1>COMP4537 - C2P - AI-Powered Notebook</h1>
+          <h2 class="remove-margin-bottom">User API Consumption</h2>
+          <code style="color: red">Admins only</code>
+        </header>
+        <main class="add-margin-bottom-20">
+          <div class="container add-margin-bottom-20">
+            <div id="adminInfo">
+              <table id="userTable">
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>API Calls Used</th>
+                    <th>API Calls Remaining</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${stats}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+        <hr />
+        <div style="margin-top: 1em">
+          <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+          </form>
+        </div>
+
+        <script src="../js/utils.js"></script>
+      </body>
+    </html>
+`;
+
+    return res.send(htmlPage);
   } catch (error) {
     console.error("Error during fetch:", error);
     return res
@@ -395,15 +444,32 @@ app.get("/getAllUsersStats", checkAdmin, async (req, res) => {
   }
 });
 
-app.get("/user", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "user.html"));
-});
+// app.get("/getAllUsersStats", checkAdmin, async (req, res) => {
+//   res.header("Access-Control-Allow-Origin", allowedOrigin);
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   res.header("Access-Control-Allow-Methods", "GET,POST");
+//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   try {
+//     const response = await axios.get(
+//       "https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/userStats/",
+//       {
+//         headers: {
+//           Authorization: `Bearer ${req.session.authToken}`,
+//         },
+//       }
+//     );
+//     const data = response.data;
 
-app.get("/getUserStats", async (req, res) => {
-  res.header("Access-Control-Allow-Origin", allowedOrigin);
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET,POST");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//     res.send(data);
+//   } catch (error) {
+//     console.error("Error during fetch:", error);
+//     return res
+//       .status(500)
+//       .send({ error: "Something went wrong. Please try again." });
+//   }
+// });
+
+app.get("/user", async (req, res) => {
   try {
     const response = await axios.get(
       `https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/stats/${req.session.userId}/`,
@@ -413,9 +479,38 @@ app.get("/getUserStats", async (req, res) => {
         },
       }
     );
-    const data = response.data;
-    console.log("data:", data);
-    res.send(data);
+    const { user__email, token_count, request_count } = response.data;
+
+    const htmlPage = `
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>User Dashboard</title>
+          <link rel="stylesheet" href="/styles/style.css" />
+        </head>
+        <body>
+          <main>
+            <div class="container">
+              <div id="userInfo">
+                <p>Email: <span id="userEmail">${user__email}</span></p>
+                <p>API Calls Used: <span id="apiCallsUsed">${request_count}</span></p>
+                <p>API Calls Remaining: <span id="apiCallsRemaining">${token_count}</span></p>
+                <div id="warningMessage" style="color: red"></div>
+              </div>
+            </div>
+          </main>
+          <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+          </form>
+
+          <script src="../js/utils.js"></script>
+        </body>
+      </html>
+    `;
+
+    res.send(htmlPage);
   } catch (error) {
     console.error("Error during fetch:", error);
     return res
@@ -423,6 +518,31 @@ app.get("/getUserStats", async (req, res) => {
       .send({ error: "Something went wrong. Please try again." });
   }
 });
+
+// app.get("/getUserStats", async (req, res) => {
+//   res.header("Access-Control-Allow-Origin", allowedOrigin);
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   res.header("Access-Control-Allow-Methods", "GET,POST");
+//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   try {
+//     const response = await axios.get(
+//       `https://comp4537-c2p-api-server-1.onrender.com/api/v1/user/stats/${req.session.userId}/`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${req.session.authToken}`,
+//         },
+//       }
+//     );
+//     const data = response.data;
+//     console.log("data:", data);
+//     res.send(data);
+//   } catch (error) {
+//     console.error("Error during fetch:", error);
+//     return res
+//       .status(500)
+//       .send({ error: "Something went wrong. Please try again." });
+//   }
+// });
 
 // ██╗       ██████╗   ██████╗   ██████╗  ██╗   ██╗ ████████╗
 // ██║      ██╔═══██╗ ██╔════╝  ██╔═══██╗ ██║   ██║ ╚══██╔══╝
