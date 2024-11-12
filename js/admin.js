@@ -1,7 +1,7 @@
 // Fetch admin data and user information
 async function fetchAdminData() {
   const response = await fetch(
-    "https://comp4537c2pfrontend-production.up.railway.app/getAllUsersStats",
+    "https://comp4537-c2p-front-6supfrwy5-andyhplaus-projects.vercel.app/getAllUsersStats",
     {
       method: "GET",
     }
